@@ -1,7 +1,11 @@
 project: "knight"
+
+variables:
+  GREET : "osami"
+
 pipeline:
   - name: "build"
     cmds:
-      - "echo test"
+      - "echo ${GREET}"
       - "echo test_knight"
     timeout: 30

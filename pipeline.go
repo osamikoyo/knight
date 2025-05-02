@@ -25,8 +25,23 @@ type Pipe struct {
 }
 
 type Manifest struct {
-	ProjectName string `yaml:"project"`
-	Pipeline    []Pipe `yaml:"pipeline"`
+	ProjectName string            `yaml:"project"`
+	Variables   map[string]string `yaml:"variables"`
+	Pipeline    []Pipe            `yaml:"pipeline"`
+}
+
+func (m *Manifest) putVariables() {
+	if m.Variables == nil {
+		return
+	}
+
+	for i, pipe := range m.Pipeline {
+		for j, cmd := range pipe.Cmds {
+			m.Pipeline[i].Cmds[j] = os.Expand(cmd, func(k string) string {
+				return m.Variables[k]
+			})
+		}
+	}
 }
 
 func (p *Pipe) Run(_ context.Context) error {
@@ -36,7 +51,7 @@ func (p *Pipe) Run(_ context.Context) error {
 
 		timeStr := now.Format("15:04:05")
 
-		fmt.Printf(Purpur+"[%s]: %s"+Reset, timeStr, cmd)
+		fmt.Printf(Purpur+"[%s]: %s\n"+Reset, timeStr, cmd)
 
 		ecmd := exec.Command(words[0], words[0:]...)
 		ecmd.Stderr = os.Stderr
@@ -50,6 +65,8 @@ func (p *Pipe) Run(_ context.Context) error {
 }
 
 func (m *Manifest) Run(pipename string) error {
+	m.putVariables()
+
 	var ctx context.Context
 
 	for _, pipe := range m.Pipeline {
