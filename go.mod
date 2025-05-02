@@ -1,4 +1,4 @@
-module github.com/osamikoyo/Knight
+module github.com/osamikoyo/knight
 
 go 1.24.2
 
