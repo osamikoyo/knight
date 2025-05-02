@@ -1,0 +1,7 @@
+project: "knight"
+pipeline:
+  - name: "build"
+    cmds:
+      - "echo test"
+      - "echo test_knight"
+    timeout: 30
