@@ -41,3 +41,27 @@ func ParseFile() (*Manifest, error) {
 
 	return &man, nil
 }
+
+func ParseFileWithPath(path string) (*Manifest, error) {
+	var (
+		man  Manifest
+		file *os.File = nil
+		err  error
+	)
+
+	file, err = os.Open(path)
+	if err != nil {
+		return nil, fmt.Errorf("error open file: %v", err)
+	}
+	if file == nil {
+		return nil, errors.New("knight manifest not found")
+	}
+
+	defer file.Close()
+
+	if err = yaml.NewDecoder(file).Decode(&man); err != nil {
+		return nil, fmt.Errorf("error decode manifest: %v", err)
+	}
+
+	return &man, nil
+}
