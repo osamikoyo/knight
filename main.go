@@ -11,6 +11,15 @@ func main() {
 		return
 	}
 
+	if os.Args[1] == "init" {
+		if err := InitKnight(); err != nil {
+			fmt.Printf("error init knight: %v\n", err)
+			return
+		}
+
+		return
+	}
+
 	pipeName := os.Args[1]
 
 	manifest, err := ParseFile()
