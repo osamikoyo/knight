@@ -26,6 +26,7 @@ type Pipe struct {
 
 type Manifest struct {
 	ProjectName string            `yaml:"project"`
+	Imports     []string          `yaml:"imports"`
 	Variables   map[string]string `yaml:"variables"`
 	Pipeline    []Pipe            `yaml:"pipeline"`
 }
